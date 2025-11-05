@@ -1,21 +1,12 @@
 import Booking from "../models/booking";
+import { BASE_DB_URL } from "../constans/url";
 import * as HelperUtils from "../utils/helperUtils";
 
 const bookingModule = {
   namespaced: true,
   state() {
     return {
-      bookings: [
-        new Booking({
-          id: "booking1",
-          carId: "car1",
-          customerId: "customer1",
-          startDate: "2025-11-30",
-          endDate: "2025-12-10",
-          days: 11,
-          totalPrice: 385000,
-        }),
-      ],
+      bookings: [],
     };
   },
   getters: {
@@ -24,18 +15,43 @@ const bookingModule = {
     },
   },
   mutations: {
-    addBooking(state, payload) {
-      state.bookings.push(payload);
+    setBookings(state, payload) {
+      state.bookings = payload;
     },
   },
   actions: {
-    addBooking(context, payload) {
+    async addBooking(context, payload) {
       const uuid = HelperUtils.generateUuidv4();
-      const newBooking = new Booking({
+      const newBooking = {
         ...payload,
         id: uuid,
+      };
+
+      const response = await fetch(`${BASE_DB_URL}bookings`, {
+        method: "POST",
+        body: JSON.stringify(newBooking),
       });
-      context.commit("addBooking", newBooking);
+
+      if (!response.ok) {
+        throw new Error("Hiba történt az adatok mentése közben! ");
+      }
+    },
+    async fetchBookings(context) {
+      const response = await fetch(`${BASE_DB_URL}bookings`);
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          "Hiba történt az adatok lekérdezése közben! " + responseData.message
+        );
+      }
+
+      const data = [];
+      Object.values(responseData).forEach((value) => {
+        data.push(value);
+      });
+
+      context.commit("setBookings", data);
     },
   },
 };

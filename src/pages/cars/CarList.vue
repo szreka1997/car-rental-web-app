@@ -1,24 +1,28 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+
+import BaseSpinner from "../../components/ui/BaseSpinner.vue";
+import BaseCard from "../../components/ui/BaseCard.vue";
 import CarListItem from "../../components/cars/CarListItem.vue";
 import DateRangePicker from "../../components/ui/DateRangePicker.vue";
 import * as DateUtils from "../../utils/dateUtils";
-import BaseCard from "../../components/ui/BaseCard.vue";
 
 const store = useStore();
 
+const isLoading = ref(false);
+loadData();
+
 const bookings = computed(() => store.getters["bookings/bookings"]);
 const customers = computed(() => store.getters["customers/customers"]);
-
-console.log("BOOKINGS:", bookings.value);
-console.log("CUSTOMERS:", customers.value);
 
 const startDate = ref(null);
 const endDate = ref(null);
 const isInvalidDate = ref(false);
 
 const cars = computed(() => {
+  console.log("BOOKINGS:", bookings.value);
+  console.log("CUSTOMERS:", customers.value);
   const allCars = store.getters["cars/cars"];
   if (!startDate.value || !endDate.value || !bookings.value) return allCars;
 
@@ -55,6 +59,21 @@ function handleCarClick() {
   }
   return true;
 }
+
+async function loadData() {
+  try {
+    isLoading.value = true;
+
+    await Promise.all([
+      store.dispatch("cars/fetchCars"),
+      store.dispatch("bookings/fetchBookings"),
+    ]);
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -68,16 +87,22 @@ function handleCarClick() {
         :is-invalid="isInvalidDate"
       ></DateRangePicker>
     </BaseCard>
-    <div class="row m-0">
-      <CarListItem
-        class="col-md-6"
-        v-for="car in cars"
-        :key="car.id"
-        :car="car"
-        :start-date="startDate"
-        :end-date="endDate"
-        @car-click="handleCarClick"
-      ></CarListItem>
+    <div>
+      <div class="text-center m-5" v-if="isLoading">
+        <BaseSpinner></BaseSpinner>
+      </div>
+
+      <div class="row m-0" v-else>
+        <CarListItem
+          class="col-md-6"
+          v-for="car in cars"
+          :key="car.id"
+          :car="car"
+          :start-date="startDate"
+          :end-date="endDate"
+          @car-click="handleCarClick"
+        ></CarListItem>
+      </div>
     </div>
   </div>
 </template>

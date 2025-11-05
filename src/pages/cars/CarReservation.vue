@@ -19,9 +19,7 @@ const startDate = route.query.startDate.replaceAll("-", ".") + ".";
 const endDate = route.query.endDate.replaceAll("-", ".") + ".";
 const numberOfDaysBooked = DateUtils.daysBetween(startDate, endDate) + 1;
 const totalPriceOfReservation = computed(() => {
-  return HelperUtils.formatThousands(
-    numberOfDaysBooked * parseInt(selectedCar.value.dailyPrice)
-  );
+  return numberOfDaysBooked * parseInt(selectedCar.value.dailyPrice);
 });
 </script>
 
@@ -64,7 +62,9 @@ const totalPriceOfReservation = computed(() => {
               <h6 class="m-0">Foglalás teljes összege</h6>
             </div>
             <div class="col-sm-6 text-center text-sm-start">
-              <p class="m-0">{{ totalPriceOfReservation }} Ft</p>
+              <p class="m-0">
+                {{ HelperUtils.formatThousands(totalPriceOfReservation) }} Ft
+              </p>
             </div>
           </div>
         </section>

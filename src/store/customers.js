@@ -1,4 +1,5 @@
 import Customer from "../models/customer";
+import { BASE_DB_URL } from "../constans/url";
 import * as HelperUtils from "../utils/helperUtils";
 
 const customersModule = {
@@ -14,20 +15,45 @@ const customersModule = {
     },
   },
   mutations: {
-    addCustomer(state, payload) {
-      state.customers.push(payload);
+    setCustomers(state, payload) {
+      state.customers = payload;
     },
   },
   actions: {
-    addCustomers(context, payload) {
+    async addCustomers(context, payload) {
       const uuid = HelperUtils.generateUuidv4();
-      const newCustomer = new Customer({
+      const newCustomer = {
         ...payload,
         id: uuid,
+      };
+
+      const response = await fetch(`${BASE_DB_URL}customers`, {
+        method: "POST",
+        body: JSON.stringify(newCustomer),
       });
-      context.commit("addCustomer", newCustomer);
+
+      if (!response.ok) {
+        throw new Error("Hiba történt az adatok mentése közben! ");
+      }
 
       return uuid;
+    },
+    async fetchCustomers(context) {
+      const response = await fetch(`${BASE_DB_URL}customers`);
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          "Hiba történt az adatok lekérdezése közben! " + responseData.message
+        );
+      }
+
+      const data = [];
+      Object.values(responseData).forEach((value) => {
+        data.push(value);
+      });
+
+      context.commit("setCustomers", data);
     },
   },
 };

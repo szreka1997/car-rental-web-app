@@ -1,4 +1,5 @@
 <script setup>
+import * as HelperUtils from "../../utils/helperUtils";
 const props = defineProps(["name", "year", "dailyPrice", "description"]);
 </script>
 
@@ -12,7 +13,9 @@ const props = defineProps(["name", "year", "dailyPrice", "description"]);
       <h6 class="card-text">{{ props.year }}</h6>
     </div>
     <div class="col">
-      <h6 class="card-text text-end">{{ props.dailyPrice }} Ft / nap</h6>
+      <h6 class="card-text text-end">
+        {{ HelperUtils.formatThousands(props.dailyPrice) }} Ft / nap
+      </h6>
     </div>
   </div>
   <div class="row">
