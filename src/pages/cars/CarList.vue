@@ -9,20 +9,15 @@ import DateRangePicker from "../../components/ui/DateRangePicker.vue";
 import * as DateUtils from "../../utils/dateUtils";
 
 const store = useStore();
-
 const isLoading = ref(false);
 loadData();
 
-const bookings = computed(() => store.getters["bookings/bookings"]);
-const customers = computed(() => store.getters["customers/customers"]);
-
 const startDate = ref(null);
 const endDate = ref(null);
-const isInvalidDate = ref(false);
+const isDateInvalid = ref(false);
 
+const bookings = computed(() => store.getters["bookings/bookings"]);
 const cars = computed(() => {
-  console.log("BOOKINGS:", bookings.value);
-  console.log("CUSTOMERS:", customers.value);
   const allCars = store.getters["cars/cars"];
   if (!startDate.value || !endDate.value || !bookings.value) return allCars;
 
@@ -48,13 +43,12 @@ const cars = computed(() => {
 function sortCars(date1, date2) {
   startDate.value = date1;
   endDate.value = date2;
-  isInvalidDate.value = false;
+  isDateInvalid.value = false;
 }
 
 function handleCarClick() {
   if (!startDate.value || !endDate.value) {
-    console.log("eddig jo");
-    isInvalidDate.value = true;
+    isDateInvalid.value = true;
     return false;
   }
   return true;
@@ -63,7 +57,6 @@ function handleCarClick() {
 async function loadData() {
   try {
     isLoading.value = true;
-
     await Promise.all([
       store.dispatch("cars/fetchCars"),
       store.dispatch("bookings/fetchBookings"),
@@ -84,7 +77,7 @@ async function loadData() {
       </div>
       <DateRangePicker
         @dates-changed="sortCars"
-        :is-invalid="isInvalidDate"
+        :is-invalid="isDateInvalid"
       ></DateRangePicker>
     </BaseCard>
     <div>

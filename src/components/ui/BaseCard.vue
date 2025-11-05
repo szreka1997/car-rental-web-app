@@ -15,16 +15,12 @@ const cardDinamycClass = computed(() => {
 </script>
 
 <template>
-  <div class="card my-card rounded-4" :class="cardDinamycClass">
+  <div class="card rounded-4 overflow-hidden" :class="cardDinamycClass">
     <slot></slot>
   </div>
 </template>
 
 <style scoped>
-.my-card {
-  overflow: hidden;
-}
-
 .animated-card {
   transition: all 0.2s ease;
 }

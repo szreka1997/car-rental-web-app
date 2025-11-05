@@ -1,4 +1,3 @@
-import Booking from "../models/booking";
 import { BASE_DB_URL } from "../constans/url";
 import * as HelperUtils from "../utils/helperUtils";
 
@@ -22,14 +21,12 @@ const bookingModule = {
   actions: {
     async addBooking(context, payload) {
       const uuid = HelperUtils.generateUuidv4();
-      const newBooking = {
-        ...payload,
-        id: uuid,
-      };
-
       const response = await fetch(`${BASE_DB_URL}bookings`, {
         method: "POST",
-        body: JSON.stringify(newBooking),
+        body: JSON.stringify({
+          ...payload,
+          id: uuid,
+        }),
       });
 
       if (!response.ok) {

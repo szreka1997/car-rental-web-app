@@ -109,15 +109,7 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dc/2024_Nissan_Qashqai_e-Power_IMG_2187.jpg"
     }
   ],
-  "customers": [
-    {
-      "id": "3e0b55c1-ecb0-44af-9f74-c95fb68fbf8a",
-      "fullName": "Szabó Réka",
-      "email": "mailbox.reka.szabo@gmail.com",
-      "address": "Verseny utca 11.",
-      "phone": "06707753989"
-    }
-  ],
+  "customers": [],
   "bookings": [
     {
       "id": "booking1",
@@ -127,15 +119,6 @@
       "endDate": "2025-12-10",
       "days": 11,
       "totalPrice": 385000
-    },
-    {
-      "id": "037ffb52-4de1-4c66-948d-7b4af33b23b0",
-      "carId": "car1",
-      "customerId": "3e0b55c1-ecb0-44af-9f74-c95fb68fbf8a",
-      "startDate": "2025.11.06.",
-      "endDate": "2025.11.07.",
-      "days": 2,
-      "totalPrice": 70000
     }
   ]
 }

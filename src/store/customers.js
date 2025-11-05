@@ -1,4 +1,3 @@
-import Customer from "../models/customer";
 import { BASE_DB_URL } from "../constans/url";
 import * as HelperUtils from "../utils/helperUtils";
 
@@ -22,14 +21,12 @@ const customersModule = {
   actions: {
     async addCustomers(context, payload) {
       const uuid = HelperUtils.generateUuidv4();
-      const newCustomer = {
-        ...payload,
-        id: uuid,
-      };
-
       const response = await fetch(`${BASE_DB_URL}customers`, {
         method: "POST",
-        body: JSON.stringify(newCustomer),
+        body: JSON.stringify({
+          ...payload,
+          id: uuid,
+        }),
       });
 
       if (!response.ok) {

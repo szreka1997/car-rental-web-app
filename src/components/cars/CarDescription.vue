@@ -1,5 +1,6 @@
 <script setup>
 import * as HelperUtils from "../../utils/helperUtils";
+
 const props = defineProps(["name", "year", "dailyPrice", "description"]);
 </script>
 

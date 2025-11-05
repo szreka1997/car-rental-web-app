@@ -1,7 +1,8 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
+
 import BaseCard from "../../components/ui/BaseCard.vue";
 import CarDescription from "../../components/cars/CarDescription.vue";
 
@@ -13,7 +14,6 @@ const props = defineProps(["carId"]);
 const isFormVisible = computed(() => {
   return route.path.split("/").includes("reservation");
 });
-
 const selectedCar = computed(() => {
   return store.getters["cars/cars"].find((car) => car.id === props.carId);
 });
@@ -34,7 +34,7 @@ function goToCarReservation() {
           <div class="row">
             <div class="col-md-6 px-0 py-0">
               <img
-                class="img-fluid h-100 card-img-top"
+                class="img-fluid h-100 object-fit-cover"
                 :src="selectedCar.imageUrl"
               />
             </div>
@@ -64,10 +64,6 @@ function goToCarReservation() {
 </template>
 
 <style scoped>
-.card-img-top {
-  object-fit: cover;
-}
-
 .my-card {
   margin: 1rem auto;
   max-width: 50rem;

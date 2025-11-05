@@ -1,16 +1,21 @@
 <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
+
 import BaseCard from "../ui/BaseCard.vue";
 import * as DateUtils from "../../utils/dateUtils";
 
 const props = defineProps(["car", "startDate", "endDate"]);
 const emit = defineEmits(["car-click"]);
+
 const router = useRouter();
 
-const name = computed(() => {
-  return props.car.brand + " " + props.car.model;
-});
+const startDateString = computed(() =>
+  DateUtils.getShortISOString(props.startDate)
+);
+const endDateString = computed(() =>
+  DateUtils.getShortISOString(props.endDate)
+);
 
 function goToCarDetails() {
   if (!props.startDate || !props.endDate) {
@@ -18,13 +23,10 @@ function goToCarDetails() {
     return;
   }
 
-  const startDateString = DateUtils.getShortISOString(props.startDate);
-  const endDateString = DateUtils.getShortISOString(props.endDate);
-
   router.push({
     name: "cars",
     params: { carId: props.car.id },
-    query: { startDate: startDateString, endDate: endDateString },
+    query: { startDate: startDateString.value, endDate: endDateString.value },
   });
 }
 </script>
@@ -37,7 +39,9 @@ function goToCarDetails() {
           <img class="card-img-top" :src="props.car.imageUrl" />
         </div>
         <div class="card-body text-center">
-          <h4 class="card-title">{{ name }}</h4>
+          <h4 class="card-title">
+            {{ props.car.brand }} {{ props.car.model }}
+          </h4>
         </div>
       </div>
     </BaseCard>
